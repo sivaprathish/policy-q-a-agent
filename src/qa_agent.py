@@ -1,5 +1,90 @@
 from __future__ import annotations
 
+import os
+import requests
+from dotenv import load_dotenv
+from src.retriever import RetrievalResult
+
+load_dotenv()
+
+def generate_answer(question: str, retrieval: RetrievalResult) -> tuple[str, int]:
+    """
+    Generate an answer using the NVIDIA LLM API.
+    
+    Returns:
+        tuple: (answer_text, total_tokens_used)
+    """
+    api_key = os.getenv("LLM_API_KEY")
+    base_url = os.getenv("LLM_BASE_URL")
+    model = os.getenv("LLM_MODEL")
+    
+    if not all([api_key, base_url, model]):
+        raise ValueError("Missing required LLM environment variables")
+    
+    # Construct context from retrieval
+    context_parts = []
+    
+    # Add document context
+    for doc in retrieval.documents:
+        context_parts.append(f"Document: {doc.record.get('title', 'Unknown')}")
+        context_parts.append(f"Content: {doc.record.get('content', '')}")
+    
+    # Add section context
+    for section in retrieval.sections:
+        context_parts.append(f"Section: {section.record.get('title', 'Unknown')}")
+        context_parts.append(f"Content: {section.record.get('content', '')}")
+    
+    # Add chunk context
+    for chunk in retrieval.chunks:
+        context_parts.append(f"Chunk: {chunk.record.get('content', '')}")
+    
+    context = "\n\n".join(context_parts)
+    
+    # Construct prompt
+    prompt = f"""Based on the following context, answer the question concisely and accurately.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:"""
+    
+    # Prepare API request
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "max_tokens": 500,
+        "temperature": 0.1
+    }
+    
+    try:
+        response = requests.post(
+            f"{base_url}/chat/completions",
+            headers=headers,
+            json=payload,
+            timeout=30
+        )
+        response.raise_for_status()
+        
+        result = response.json()
+        answer = result["choices"][0]["message"]["content"].strip()
+        total_tokens = result["usage"]["total_tokens"]
+        
+        return answer, total_tokens
+        
+    except Exception as e:
+        # Fallback answer in case of API error
+        answer = f"Error generating answer: {str(e)}"
+        return answer, 0
+
 import requests
 
 from config import (
