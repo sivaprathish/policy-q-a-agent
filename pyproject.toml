@@ -1,0 +1,27 @@
+[project]
+name = "policy-qa-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "sivaprathish", email = "sivaprathishsiva@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "graphviz>=0.21",
+    "langchain-nvidia-ai-endpoints>=1.4.3",
+    "pydantic>=2.13.4",
+    "pymupdf>=1.28.0",
+    "requests>=2.34.2",
+    "tiktoken>=0.13.0",
+    "torch>=2.13.0",
+    "torchvision>=0.28.0",
+    "tqdm>=4.70.0",
+]
+
+[project.scripts]
+policy-qa-agent = "policy_qa_agent:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
