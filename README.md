@@ -15,6 +15,6 @@ Response latency measurement
 Supports employee handbooks, HR policies, SOPs, compliance documents, and company manuals
 
 
-<im<img width="1377" height="676" alt="image" src="https://github.com/user-attachments/assets/e9310ac7-7933-486b-9f8b-df867e91ddab" />
-g width="1176" height="371" alt="image" src="https://github.com/user-attachments/assets/9b1c2a46-a6ab-4677-b908-12756f52495e" />
-![Uploading image.png…]()
+<img width="1176" height="371" alt="image" src="https://github.com/user-attachments/assets/9b1c2a46-a6ab-4677-b908-12756f52495e" />
+![Uploading image.png…]()<img width="1377" height="676" alt="image" src="https://github.com/user-attachments/assets/e9310ac7-7933-486b-9f8b-df867e91ddab" />
+
